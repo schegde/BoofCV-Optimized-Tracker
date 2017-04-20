@@ -37,6 +37,7 @@ public class PerformanceBenchmarkTracker {
 
     public static void main(String[] args) {
         MediaManager media = DefaultMediaManager.INSTANCE;
+        System.out.printf("Circulant Tracker Benchmark Application");
         String fileName = "data/example/wildcat_robot.mjpeg";
         DecimalFormat numberFormat = new DecimalFormat("#.000000");
         // specify the target's initial location and initialize with the first frame
@@ -129,7 +130,7 @@ public class PerformanceBenchmarkTracker {
 
 
 
-            // TODO save history to a file.  One file for EACH trial
+            // save history to a file.  One file for EACH trial
 
             try
             {
@@ -157,14 +158,5 @@ public class PerformanceBenchmarkTracker {
 
             }
         }
-
-
-        // TODO write application which will read the history file and visualize the results.
-        // Have it be a desktop application but doesn't need to be in java.  Just needs to run in Ubuntu and windows
-        // would also be nice.  This will be used to sanity the tracker
-
-        // Visualization is used as a sanity check.  Did the track diverge? How different are the results?  Takes
-        // a little bit of effort but can save a lot of hassle down the road
-
     }
 }
