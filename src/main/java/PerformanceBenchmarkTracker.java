@@ -9,15 +9,24 @@ import boofcv.struct.image.GrayU8;
 import boofcv.struct.image.ImageType;
 import boofcv.struct.image.Planar;
 import georegression.struct.shapes.Quadrilateral_F64;
+import boofcv.struct.image.ImageBase;
 
+import boofcv.gui.image.ShowImages;
+import boofcv.gui.tracker.TrackerObjectQuadPanel;
+
+import boofcv.misc.BoofMiscOps;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.awt.image.BufferedImage;
+import java.awt.*;
 
 /**
  * Example of how to benchmark large components easily.
@@ -28,6 +37,7 @@ public class PerformanceBenchmarkTracker {
 
     public static void main(String[] args) {
         MediaManager media = DefaultMediaManager.INSTANCE;
+        System.out.println("Circulant Tracker Benchmark Application");
         String fileName = "data/example/wildcat_robot.mjpeg";
         DecimalFormat numberFormat = new DecimalFormat("#.000000");
         // specify the target's initial location and initialize with the first frame
@@ -120,20 +130,17 @@ public class PerformanceBenchmarkTracker {
 
 
 
-
-
-
-            // TODO save history to a file.  One file for EACH trial
+            // save history to a file.  One file for EACH trial
 
             try
             {
                 FileWriter fstream = new FileWriter("history."+timeStamp+".txt", true);   // append to file
                 out = new BufferedWriter(fstream);
                 for( Quadrilateral_F64 history_loc : history ) {
-                    out.write("a: "+history_loc.a.x+" "+history_loc.a.y+" "+
-                            "b: "+history_loc.b.x+" "+history_loc.b.y+" "+
-                            "c: "+history_loc.c.x+" "+history_loc.c.y+" "+
-                            "d: "+history_loc.d.x+" "+history_loc.d.y+"\n");
+                    out.write("a:"+history_loc.a.x+" "+history_loc.a.y+"\n"+
+                            "b:"+history_loc.b.x+" "+history_loc.b.y+"\n"+
+                            "c:"+history_loc.c.x+" "+history_loc.c.y+"\n "+
+                            "d:"+history_loc.d.x+" "+history_loc.d.y+"\n");
                 }
             }
             catch (IOException e)
@@ -151,13 +158,5 @@ public class PerformanceBenchmarkTracker {
 
             }
         }
-
-        // TODO write application which will read the history file and visualize the results.
-        // Have it be a desktop application but doesn't need to be in java.  Just needs to run in Ubuntu and windows
-        // would also be nice.  This will be used to sanity the tracker
-
-        // Visualization is used as a sanity check.  Did the track diverge? How different are the results?  Takes
-        // a little bit of effort but can save a lot of hassle down the road
-
     }
 }
