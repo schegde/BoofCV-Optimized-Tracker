@@ -9,15 +9,24 @@ import boofcv.struct.image.GrayU8;
 import boofcv.struct.image.ImageType;
 import boofcv.struct.image.Planar;
 import georegression.struct.shapes.Quadrilateral_F64;
+import boofcv.struct.image.ImageBase;
 
+import boofcv.gui.image.ShowImages;
+import boofcv.gui.tracker.TrackerObjectQuadPanel;
+
+import boofcv.misc.BoofMiscOps;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.awt.image.BufferedImage;
+import java.awt.*;
 
 /**
  * Example of how to benchmark large components easily.
@@ -120,9 +129,6 @@ public class PerformanceBenchmarkTracker {
 
 
 
-
-
-
             // TODO save history to a file.  One file for EACH trial
 
             try
@@ -130,10 +136,10 @@ public class PerformanceBenchmarkTracker {
                 FileWriter fstream = new FileWriter("history."+timeStamp+".txt", true);   // append to file
                 out = new BufferedWriter(fstream);
                 for( Quadrilateral_F64 history_loc : history ) {
-                    out.write("a: "+history_loc.a.x+" "+history_loc.a.y+" "+
-                            "b: "+history_loc.b.x+" "+history_loc.b.y+" "+
-                            "c: "+history_loc.c.x+" "+history_loc.c.y+" "+
-                            "d: "+history_loc.d.x+" "+history_loc.d.y+"\n");
+                    out.write("a:"+history_loc.a.x+" "+history_loc.a.y+"\n"+
+                            "b:"+history_loc.b.x+" "+history_loc.b.y+"\n"+
+                            "c:"+history_loc.c.x+" "+history_loc.c.y+"\n "+
+                            "d:"+history_loc.d.x+" "+history_loc.d.y+"\n");
                 }
             }
             catch (IOException e)
@@ -151,6 +157,122 @@ public class PerformanceBenchmarkTracker {
 
             }
         }
+
+
+        TrackerObjectQuadPanel gui = new TrackerObjectQuadPanel(null);
+        SimpleImageSequence video_file = media.openVideo(fileName, ImageType.pl(3,GrayU8.class)); 
+        Quadrilateral_F64 loc = new Quadrilateral_F64(0,0,0,0,0,0,0,0);
+
+        System.out.print("Starting the visualization,enter the filename just created:!!");
+
+        Scanner scanner = new Scanner(System.in);
+        String history_file = scanner.next();
+
+        try{
+
+        FileReader input = new FileReader(history_file);
+        BufferedReader bufRead = new BufferedReader(input);
+        String myLine = null;
+
+
+        //Read first frame quad positions!.
+          
+                myLine = bufRead.readLine(); //read A
+                String[] array1 = myLine.split(":");
+                String[] array2 = array1[1].split(" ");
+                loc.a.x = Double.parseDouble(array2[0]);
+                loc.a.y = Double.parseDouble(array2[1]);
+
+                myLine = bufRead.readLine(); //read B
+                array1 = myLine.split(":");
+                array2 = array1[1].split(" ");
+                loc.b.x = Double.parseDouble(array2[0]);
+                loc.b.y = Double.parseDouble(array2[1]);
+
+                myLine = bufRead.readLine(); //read C
+                array1 = myLine.split(":");
+                array2 = array1[1].split(" ");
+                loc.c.x = Double.parseDouble(array2[0]);
+                loc.c.y = Double.parseDouble(array2[1]);
+
+                myLine = bufRead.readLine(); //read D
+                array1 = myLine.split(":");
+                array2 = array1[1].split(" ");
+                loc.d.x = Double.parseDouble(array2[0]);
+                loc.d.y = Double.parseDouble(array2[1]);
+
+           
+
+
+        ImageBase frame = video_file.next(); //Get the first frame
+        
+        // For displaying the results
+        //TrackerObjectQuadPanel gui = new TrackerObjectQuadPanel(null);
+        gui.setPreferredSize(new Dimension(frame.getWidth(),frame.getHeight()));
+        gui.setBackGround((BufferedImage)video_file.getGuiImage());
+        gui.setTarget(loc,true);
+        ShowImages.showWindow(gui,"Tracking Results", true);
+
+        // Track the object across each video frame and display the results
+        long previous = 0;
+        while( video_file.hasNext() ) {
+            frame = video_file.next();
+
+            //boolean visible = tracker.process(frame,location);
+
+            gui.setBackGround((BufferedImage) video_file.getGuiImage());
+
+            if((myLine = bufRead.readLine())!=null)
+            {     
+                //myLine = bufRead.readLine(); //read A
+                array1 = myLine.split(":");
+                array2 = array1[1].split(" ");
+                loc.a.x = Double.parseDouble(array2[0]);
+                loc.a.y = Double.parseDouble(array2[1]);
+
+                myLine = bufRead.readLine(); //read B
+                array1 = myLine.split(":");
+                array2 = array1[1].split(" ");
+                loc.b.x = Double.parseDouble(array2[0]);
+                loc.b.y = Double.parseDouble(array2[1]);
+
+                myLine = bufRead.readLine(); //read C
+                array1 = myLine.split(":");
+                array2 = array1[1].split(" ");
+                loc.c.x = Double.parseDouble(array2[0]);
+                loc.c.y = Double.parseDouble(array2[1]);
+
+                myLine = bufRead.readLine(); //read D
+                array1 = myLine.split(":");
+                array2 = array1[1].split(" ");
+                loc.d.x = Double.parseDouble(array2[0]);
+                loc.d.y = Double.parseDouble(array2[1]);
+            }
+
+            gui.setTarget(loc, true);
+            gui.repaint();
+
+            // shoot for a specific frame rate
+            long time = System.currentTimeMillis();
+            BoofMiscOps.pause(Math.max(0,80-(time-previous)));
+            previous = time;
+        }
+    }
+    catch (IOException e)
+            {
+                System.err.println("Error: " + e.getMessage());
+            }
+
+
+        scanner.close();
+
+
+
+        
+          
+       
+
+
 
         // TODO write application which will read the history file and visualize the results.
         // Have it be a desktop application but doesn't need to be in java.  Just needs to run in Ubuntu and windows
