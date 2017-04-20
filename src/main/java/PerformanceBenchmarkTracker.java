@@ -37,7 +37,7 @@ public class PerformanceBenchmarkTracker {
 
     public static void main(String[] args) {
         MediaManager media = DefaultMediaManager.INSTANCE;
-        System.out.printf("Circulant Tracker Benchmark Application");
+        System.out.println("Circulant Tracker Benchmark Application");
         String fileName = "data/example/wildcat_robot.mjpeg";
         DecimalFormat numberFormat = new DecimalFormat("#.000000");
         // specify the target's initial location and initialize with the first frame
