@@ -10,8 +10,14 @@ import boofcv.struct.image.ImageType;
 import boofcv.struct.image.Planar;
 import georegression.struct.shapes.Quadrilateral_F64;
 
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+
 
 /**
  * Example of how to benchmark large components easily.
@@ -23,7 +29,7 @@ public class PerformanceBenchmarkTracker {
     public static void main(String[] args) {
         MediaManager media = DefaultMediaManager.INSTANCE;
         String fileName = "data/example/wildcat_robot.mjpeg";
-
+        DecimalFormat numberFormat = new DecimalFormat("#.000000");
         // specify the target's initial location and initialize with the first frame
 
         java.util.List<Quadrilateral_F64> locations = new ArrayList<>();
@@ -80,14 +86,65 @@ public class PerformanceBenchmarkTracker {
             double fps_Video = totalFrames/(totalVideo*1e-9);
             double fps_RGB_GRAY = totalFrames/(totalRGB_GRAY*1e-9);
             double fps_Tracker = totalFrames/(totalTracker*1e-9);
-
-            // TODO Output to a file.  One file for all results
+            String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+            // Output to a file.  One file for all results
             System.out.printf("Summary: video %6.1f RGB_GRAY %6.1f Tracker %6.1f  Faults %d\n",
                     fps_Video,fps_RGB_GRAY,fps_Tracker,totalFaults);
             // The runtime performance file will be used to track performance and measure the merits of different
             // approaches
+            BufferedWriter out = null;
+            try
+            {
+                FileWriter fstream = new FileWriter("summary.txt", true);   // append to file
+                out = new BufferedWriter(fstream);
+                String summaryString = timeStamp+ " Video: "+ numberFormat.format(fps_Video)
+                        +" RGB_GRAY: "+numberFormat.format(fps_RGB_GRAY)+ " Tracker: "
+                        + numberFormat.format(fps_Tracker)+ " Faults: "+
+                        totalFaults+"\n";
+                out.write(summaryString);
+            }
+            catch (IOException e)
+            {
+                System.err.println("Error: " + e.getMessage());
+            }
+            finally
+            {
+                if(out != null) {
+                    try {
+                        out.close();
+                    }
+                    catch (Exception ex) {/*ignore*/}
+                }
+
+            }
+
+
+
+
+
 
             // TODO save history to a file.  One file for EACH trial
+
+            try
+            {
+                FileWriter fstream = new FileWriter("history"+timeStamp+".txt", true);   // append to file
+                out = new BufferedWriter(fstream);
+                out.write("Yo");
+            }
+            catch (IOException e)
+            {
+                System.err.println("Error: " + e.getMessage());
+            }
+            finally
+            {
+                if(out != null) {
+                    try {
+                        out.close();
+                    }
+                    catch (Exception ex) {/*ignore*/}
+                }
+
+            }
         }
 
         // TODO write application which will read the history file and visualize the results.

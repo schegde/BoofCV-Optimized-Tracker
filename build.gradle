@@ -7,7 +7,7 @@ sourceCompatibility = 1.8
 
 jar {
     manifest {
-        attributes 'Main-Class': 'ExampleTrackerObjectQuad'
+        attributes 'Main-Class': 'PerformanceBenchmarkTracker'
     }
 }
 
@@ -26,3 +26,19 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
+task ApplicationJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Example Tracking',
+                'Implementation-Version': version,
+                'Main-Class': 'PerformanceBenchmarkTracker'
+    }
+
+    outputs.upToDateWhen { false }
+
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+
+    doLast {
+        archivePath.renameTo(file('example.jar'))
+    }
+}
