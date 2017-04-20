@@ -127,9 +127,14 @@ public class PerformanceBenchmarkTracker {
 
             try
             {
-                FileWriter fstream = new FileWriter("history"+timeStamp+".txt", true);   // append to file
+                FileWriter fstream = new FileWriter("history."+timeStamp+".txt", true);   // append to file
                 out = new BufferedWriter(fstream);
-                out.write("Yo");
+                for( Quadrilateral_F64 history_loc : history ) {
+                    out.write("a: "+history_loc.a.x+" "+history_loc.a.y+" "+
+                            "b: "+history_loc.b.x+" "+history_loc.b.y+" "+
+                            "c: "+history_loc.c.x+" "+history_loc.c.y+" "+
+                            "d: "+history_loc.d.x+" "+history_loc.d.y+"\n");
+                }
             }
             catch (IOException e)
             {
