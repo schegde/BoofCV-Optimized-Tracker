@@ -39,6 +39,23 @@ task ApplicationJar(type: Jar) {
     with jar
 
     doLast {
-        archivePath.renameTo(file('example.jar'))
+        archivePath.renameTo(file('tracker.jar'))
+    }
+}
+
+task VisualizerJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Tracking Results Visualizer',
+                'Implementation-Version': version,
+                'Main-Class': 'Visualizer'
+    }
+
+    outputs.upToDateWhen { false }
+
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+
+    doLast {
+        archivePath.renameTo(file('visualizer.jar'))
     }
 }
