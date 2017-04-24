@@ -27,14 +27,25 @@ android {
             path "CMakeLists.txt"
         }
     }
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/maven/org.bytedeco.javacpp-presets/ffmpeg/pom.properties'
+        exclude 'META-INF/maven/org.bytedeco.javacpp-presets/ffmpeg/pom.xml'
+    }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
+    compile files('libs/ffmpeg-android-arm.jar')
+    compile files('libs/ffmpeg.jar')
+    compile files('libs/javacpp.jar')
+    compile files('libs/javacv.jar')
+    compile files('libs/videoinput.jar')
 }
