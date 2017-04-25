@@ -10,15 +10,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.support.v4.app.ActivityCompat;
 
-import com.getkeepsafe.relinker.ReLinker;
 
-import org.bytedeco.javacv.CanvasFrame;
-import org.bytedeco.javacv.FFmpegFrameGrabber;
 
 import java.io.FileInputStream;
 
 import static android.content.ContentValues.TAG;
-import static android.webkit.ConsoleMessage.MessageLevel.LOG;
+
 
 
 public class MainActivity extends Activity {
