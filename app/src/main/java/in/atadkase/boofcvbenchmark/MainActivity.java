@@ -11,7 +11,7 @@ import android.util.Log;
 import android.support.v4.app.ActivityCompat;
 
 
-import org.bytedeco.javacv.CanvasFrame;
+
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Frame;
 
@@ -100,7 +100,6 @@ public class MainActivity extends Activity {
         //setContentView(R.layout.activity_main);
         verifyStoragePermissions(this);
         FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(SrcPath);
-        CanvasFrame canvasFrame = new CanvasFrame("Test");
         try
         {
             grabber.start();
