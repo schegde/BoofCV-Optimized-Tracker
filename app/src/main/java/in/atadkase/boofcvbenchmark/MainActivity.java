@@ -14,6 +14,7 @@ import android.support.v4.app.ActivityCompat;
 
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Frame;
+import org.bytedeco.javacv.FrameGrabber;
 
 import java.io.FileInputStream;
 import java.nio.ByteBuffer;
@@ -105,16 +106,38 @@ public class MainActivity extends Activity {
             grabber.start();
             long time_vid = grabber.getLengthInTime();
             Log.d("[TIME_VID]", "Time is "+ time_vid);
-            Frame frame;
+            Frame frame = new Frame();
             long counter = 0;
-            for(long i = 0; i<grabber.getLengthInFrames(); i++)
+            int imageWidth = grabber.getImageWidth();
+            int imageHeight = grabber.getImageHeight();
+            FrameGrabber.ImageMode imageFormat = grabber.getImageMode();
+            int numBands=1;
+            if(imageFormat == FrameGrabber.ImageMode.COLOR)
+            {
+                numBands = 3;
+            }
+            for(long i = 0; i<grabber.getLengthInFrames()/10000; i++)
             {
                 counter++;
-                frame = grabber.grabImage();
-                InterleavedU8 interleaved = new InterleavedU8();
-                convert(frame, interleaved, true);
+                try {
+                    frame = grabber.grabImage();
+                    if(frame== null)
+                        break;
+                }catch (Exception e)
+                {
+                    Log.e("EXCEPTION","Grab image exception");
+                }
+
+                InterleavedU8 interleaved = new InterleavedU8(imageWidth, imageHeight, numBands);
+                try {
+                    convert(frame, interleaved, true);
+                }catch (Exception e)
+                {
+                    Log.e("EXCEPTION","Convert" ,e);
+                }
             }
             Log.d("[FRAMES]", "Frames = "+ counter);
+            grabber.stop();
         }catch (Exception exception)
         {
             Log.e("1", "Grabber Exception");
