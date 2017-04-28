@@ -2,10 +2,9 @@ package in.atadkase.boofcvbenchmark;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
+
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.media.MediaMetadataRetriever;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.support.v4.app.ActivityCompat;
@@ -27,7 +26,7 @@ import static android.content.ContentValues.TAG;
 
 public class MainActivity extends Activity {
 
-    String SrcPath="/storage/emulated/0/imag/file3.mp4";
+    String SrcPath="/storage/self/primary/wildcat_robot.mp4";
 
     // Storage Permissions
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -116,7 +115,7 @@ public class MainActivity extends Activity {
             {
                 numBands = 3;
             }
-            for(long i = 0; i<grabber.getLengthInFrames()/10000; i++)
+            for(long i = 0; i<grabber.getLengthInFrames(); i++)
             {
                 counter++;
                 try {
